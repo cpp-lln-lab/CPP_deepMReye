@@ -2,3 +2,5 @@ pybids==0.14.0
 jupyterlab
 black
 nb_black
+datalad
+rich
