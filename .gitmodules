@@ -6,3 +6,7 @@
 [submodule "code/lib/deepMReye"]
 	path = code/lib/deepMReye
 	url = https://github.com/DeepMReye/DeepMReye.git
+[submodule "outputs/deepMReye"]
+	path = outputs/deepMReye
+	url = ./outputs/deepMReye
+	datalad-id = 65633570-a8ff-48c7-a8ca-e94380a61159
