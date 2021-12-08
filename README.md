@@ -1,4 +1,8 @@
-# Project <insert name>
+# Project CPP_deepMReye
+
+```
+datalad install --recursive https://github.com/cpp-lln-lab/CPP_deepMReye.git
+```
 
 ## Dataset structure
 

@@ -3,8 +3,3 @@
 	url = git@gin.g-node.org:/cpp-lln-lab/rest_blnd_can_fmriprep.git
 	datalad-id = 73d29e70-653b-4320-8fcf-4d6525bc57e8
 	datalad-url = git@gin.g-node.org:/cpp-lln-lab/rest_blnd_can_fmriprep.git
-[submodule "code/lib/deepMReye"]
-	path = code/lib/deepMReye
-	url = https://github.com/cpp-lln-lab/CPP_deepMReye.git
-	datalad-id = 5f7e5ee1-bb3a-45c5-ade1-6ec9eaf4407e
-	datalad-url = https://github.com/cpp-lln-lab/CPP_deepMReye.git
