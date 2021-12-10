@@ -14,6 +14,4 @@ From the `code` directory
 
 ```
 pip install -r requirements.txt
-cd lib/deepMReye
-pip install .
 ```

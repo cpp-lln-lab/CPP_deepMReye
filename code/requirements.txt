@@ -4,3 +4,4 @@ black
 nb_black
 datalad
 rich
+git+https://github.com/DeepMReye/DeepMReye.git
