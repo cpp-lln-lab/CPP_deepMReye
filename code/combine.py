@@ -23,7 +23,7 @@ def process_subject(layout, subject_label):
 
     print(f"Running subject: {subject_label}")
 
-    subj_data, subj_labels, subj_ids = [], [], []
+    subj = {"data": [], "labels": [], "ids": []}
 
     masks = layout.get(
         return_type="filename",
@@ -51,26 +51,29 @@ def process_subject(layout, subject_label):
         # Note that mask has time as third dimension
         if this_mask.shape[3] != this_label.shape[0]:
             warnings.warns(
-                f"Skipping file {img} from subject {subj} --- Wrong alignment (Mask {this_mask.shape} - Label {this_label.shape}"
+                f"Skipping file {img} from subject {subject_label} --- Wrong alignment (Mask {this_mask.shape} - Label {this_label.shape}"
             )
             continue
 
         # Store across runs
-        subj_data.append(this_mask)
-        subj_labels.append(this_label)
-        subj_ids.append(
+        subj["data"].append(this_mask)
+        subj["labels"].append(this_label)
+        subj["ids"].append(
             ([subject_label] * this_label.shape[0], [i] * this_label.shape[0])
         )
 
-    # Save participant file
+    save_participant_file(layout, img, subj)
+
+
+def save_participant_file(layout, img, subj):
 
     output_file = create_bidsname(layout, img, "no_label")
 
     preprocess.save_data(
         os.path.basename(output_file),
-        subj_data,
-        subj_labels,
-        subj_ids,
+        subj["data"],
+        subj["labels"],
+        subj["ids"],
         layout.root,
         center_labels=False,
     )
