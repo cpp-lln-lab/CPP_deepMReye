@@ -1,3 +1,5 @@
+import os
+
 from deepmreye import analyse
 from deepmreye import train
 from deepmreye.util import data_generator
@@ -36,7 +38,7 @@ def generalize(dataset_path):
         )
 
         for file in data:
-            print(f"adding file: {file}")
+            print(f"adding file: {os.path.basename(file)}")
             all_data.append(file)
 
     generators = data_generator.create_generators(all_data, all_data)

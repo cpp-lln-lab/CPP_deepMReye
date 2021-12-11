@@ -17,7 +17,7 @@ def config():
         "space": "MNI152NLin2009cAsym",
         "suffix": "bold",
         "task": "rest",
-        "debug": True,
+        "debug": False,
     }
 
     has_GPU = False
