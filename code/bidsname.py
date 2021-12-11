@@ -99,6 +99,6 @@ def create_bidsname(layout, filename: str, filetype: str) -> str:
         entities, bids_name_config[filetype], validate=False
     )
 
-    output_file = join(layout.root, output_file)
+    output_file = abspath(join(layout.root, output_file))
 
     return output_file

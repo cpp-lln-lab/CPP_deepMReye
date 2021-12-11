@@ -29,7 +29,7 @@ def config():
 
 def move_file(input: str, output: str):
 
-    print(f"{input} --> {output}")
+    print(f"{abspath(input)} --> {abspath(output)}")
     create_dir_for_file(output)
     os.rename(input, output)
 
@@ -70,15 +70,28 @@ def check_layout(layout):
     if desc["DatasetType"] != "derivative":
         raise Exception("Input dataset should be BIDS derivative")
 
+    generated_by = desc["GeneratedBy"][0]["Name"]
+
     cfg = config()
-    bf = layout.get(
-        return_type="filename",
-        task=cfg["task"],
-        space=cfg["space"],
-        suffix="^bold$",
-        extension="nii.*",
-        regex_search=True,
-    )
+
+    if generated_by == "fMRIPrep":
+        bf = layout.get(
+            return_type="filename",
+            task=cfg["task"],
+            space=cfg["space"],
+            suffix="^bold$",
+            extension="nii.*",
+            regex_search=True,
+        )
+    elif generated_by == "deepMReye":
+        bf = layout.get(
+            return_type="filename",
+            task=cfg["task"],
+            space=cfg["space"],
+            suffix="^mask$",
+            extension="p",
+            regex_search=True,
+        )
 
     if bf == []:
         raise Exception("Input dataset does not have any data to process")

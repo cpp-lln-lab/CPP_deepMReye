@@ -1,5 +1,3 @@
-import os
-
 from bidsname import create_bidsname
 from bidsname import set_dataset_description
 from bidsname import write_dataset_description
@@ -78,6 +76,7 @@ def preprocess_dataset(dataset_path):
     create_dir_if_absent(cfg["output_folder"])
     output = get_dataset_layout(cfg["output_folder"])
     output = set_dataset_description(output)
+    output.dataset_description["DatasetType"] = "derivative"
     output.dataset_description["GeneratedBy"][0]["Name"] = "deepMReye"
     write_dataset_description(output)
 
