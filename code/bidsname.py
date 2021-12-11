@@ -90,12 +90,14 @@ def get_config(config_file="", default="") -> dict:
         return json.load(ff)
 
 
-def create_mask_name(layout, filename: str) -> str:
+def create_bidsname(layout, filename: str, filetype: str) -> str:
 
     entities = layout.parse_file_entities(filename)
 
     bids_name_config = get_bidsname_config()
-    output_file = layout.build_path(entities, bids_name_config["mask"], validate=False)
+    output_file = layout.build_path(
+        entities, bids_name_config[filetype], validate=False
+    )
 
     output_file = join(layout.root, output_file)
 

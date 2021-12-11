@@ -1,17 +1,18 @@
 import os
 
-from bidsname import create_mask_name
+from bidsname import create_bidsname
 from bidsname import set_dataset_description
 from bidsname import write_dataset_description
 from deepmreye import preprocess
 from rich import print
 from utils import check_layout
 from utils import config
-from utils import create_dir_for_file
 from utils import create_dir_if_absent
 from utils import get_dataset_layout
 from utils import get_deepmreye_mask_name
+from utils import get_deepmreye_mask_report
 from utils import list_subjects
+from utils import move_file
 from utils import return_regex
 
 
@@ -38,6 +39,7 @@ def preprocess_subject(layout, subject_label):
 
     cfg = config()
 
+    # TODO performance: do not reload the input layout for every subject
     layout = get_dataset_layout(cfg["input_folder"])
 
     print(f"Running subject: {subject_label}")
@@ -52,17 +54,19 @@ def preprocess_subject(layout, subject_label):
         regex_search=True,
     )
 
+    # TODO performance: do not reload the output layout for every subject
+    output = get_dataset_layout(cfg["output_folder"])
+
     for img in bf:
         coregister_and_extract_data(img)
 
-        output = get_dataset_layout(cfg["output_folder"])
-        mask_name = create_mask_name(output, img)
-        create_dir_for_file(mask_name)
-
+        mask_name = create_bidsname(output, img, "mask")
         deepmreye_mask_name = get_deepmreye_mask_name(layout, img)
+        move_file(deepmreye_mask_name, mask_name)
 
-        print(f"{deepmreye_mask_name} --> {mask_name}")
-        os.rename(deepmreye_mask_name, mask_name)
+        report_name = create_bidsname(output, img, "report")
+        deepmreye_mask_report = get_deepmreye_mask_report(layout, img)
+        move_file(deepmreye_mask_report, report_name)
 
 
 def preprocess_dataset(dataset_path):
@@ -74,7 +78,7 @@ def preprocess_dataset(dataset_path):
 
     create_dir_if_absent(cfg["output_folder"])
     output = get_dataset_layout(cfg["output_folder"])
-    layout = set_dataset_description(layout)
+    output = set_dataset_description(output)
     output.dataset_description["GeneratedBy"][0]["Name"] = "deepMReye"
     write_dataset_description(output)
 

@@ -22,6 +22,8 @@ def test_return_path_rel_dataset():
 
 def test_get_deepmreye_mask_name():
 
+    # TODO need dummy dataset to test this
+
     cfg = config()
     layout = get_dataset_layout(cfg["input_folder"])
 

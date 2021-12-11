@@ -27,6 +27,13 @@ def config():
     return cfg
 
 
+def move_file(input: str, output: str):
+
+    print(f"{input} --> {output}")
+    create_dir_for_file(output)
+    os.rename(input, output)
+
+
 def create_dir_if_absent(output_path):
     if not Path(output_path).exists():
         print(f"Creating dir: {output_path}")
@@ -88,6 +95,26 @@ def return_path_rel_dataset(file_path, dataset_path):
     return rel_path
 
 
+def get_deepmreye_filename(layout, img: str, filetype: str) -> str:
+
+    if isinstance(img, (list)):
+        img = img[0]
+
+    bf = layout.get_file(img)
+    filename = bf.filename
+
+    if filetype == "mask":
+        filename = "mask_" + filename.replace("nii.gz", "p")
+    elif filetype == "report":
+        filename = "report_" + filename.replace("nii.gz", "html")
+
+    filefolder = dirname(abspath(img))
+
+    deepmreye_filename = join(filefolder, filename)
+
+    return deepmreye_filename
+
+
 def get_deepmreye_mask_name(layout, img):
 
     if isinstance(img, (list)):
@@ -101,3 +128,18 @@ def get_deepmreye_mask_name(layout, img):
     deepmreye_mask_name = join(filefolder, filename)
 
     return deepmreye_mask_name
+
+
+def get_deepmreye_mask_report(layout, img):
+
+    if isinstance(img, (list)):
+        img = img[0]
+
+    bf = layout.get_file(img)
+    filename = bf.filename
+    filename = "report_" + filename.replace("nii.gz", "html")
+    filefolder = dirname(abspath(img))
+
+    deepmreye_mask_report = join(filefolder, filename)
+
+    return deepmreye_mask_report
