@@ -1,8 +1,17 @@
 import os
 
+from bidsname import create_mask_name
+from bidsname import get_bidsname_config
+from bidsname import set_dataset_description
+from bidsname import write_dataset_description
 from utils import get_dataset_layout
 
-from bidsname import get_bidsname_config, create_mask_name
+
+def test_write_dataset_description_smoke_test():
+    layout = get_dataset_layout("data")
+    layout = set_dataset_description(layout)
+    layout.dataset_description["GeneratedBy"][0]["Name"] = "deepMReye"
+    write_dataset_description(layout)
 
 
 def test_get_bidsname_config_smoke_test():

@@ -1,7 +1,57 @@
 import json
-import os
-
+from os.path import abspath
+from os.path import dirname
+from os.path import join
 from pathlib import Path
+
+
+def write_dataset_description(layout):
+
+    output_file = join(layout.root, "dataset_description.json")
+
+    with open(output_file, "w") as ff:
+        json.dump(layout.dataset_description, ff)
+
+
+def set_dataset_description(layout, is_derivative=True):
+
+    data = {
+        "Name": "dataset name",
+        "BIDSVersion": "1.6.0",
+        "DatasetType": "raw",
+        "License": "",
+        "Authors": ["", ""],
+        "Acknowledgements": "Special thanks to ",
+        "HowToAcknowledge": "Please cite this paper: ",
+        "Funding": ["", ""],
+        "EthicsApprovals": [""],
+        "ReferencesAndLinks": ["", ""],
+        "DatasetDOI": "doi:",
+        "HEDVersion": "",
+    }
+
+    if is_derivative:
+        data["GeneratedBy"] = [
+            {
+                "Name": "",
+                "Version": "",
+                "Container": {"Type": "", "Tag": ""},
+                "Description": "",
+                "CodeURL": "",
+            },
+        ]
+
+        data["SourceDatasets"] = [
+            {
+                "DOI": "doi:",
+                "URL": "",
+                "Version": "",
+            }
+        ]
+
+    layout.dataset_description = data
+
+    return layout
 
 
 def get_bidsname_config(config_file="") -> dict:
@@ -31,8 +81,8 @@ def get_pybids_config(config_file="") -> dict:
 def get_config(config_file="", default="") -> dict:
 
     if config_file == "" or not Path(config_file).exists():
-        my_path = os.path.dirname(os.path.abspath(__file__))
-        config_file = os.path.join(my_path, default)
+        my_path = dirname(abspath(__file__))
+        config_file = join(my_path, default)
 
     if config_file == "" or not Path(config_file).exists():
         return
@@ -47,6 +97,6 @@ def create_mask_name(layout, filename: str) -> str:
     bids_name_config = get_bidsname_config()
     output_file = layout.build_path(entities, bids_name_config["mask"], validate=False)
 
-    output_file = os.path.join(layout.root, output_file)
+    output_file = join(layout.root, output_file)
 
     return output_file

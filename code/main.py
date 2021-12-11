@@ -1,10 +1,10 @@
 # Import modules and add library to path
 import os
+import pickle
 import sys
 
-import pandas as pd
 import numpy as np
-import pickle
+import pandas as pd
 
 # Change to os.environ["CUDA_VISIBLE_DEVICES"] = "0" if you have access to a GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = ""

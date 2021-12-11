@@ -1,18 +1,18 @@
 import os
 
+from bidsname import create_mask_name
+from bidsname import set_dataset_description
+from bidsname import write_dataset_description
 from deepmreye import preprocess
 from rich import print
-from utils import (
-    config,
-    create_dir_if_absent,
-    create_dir_for_file,
-    get_deepmreye_mask_name,
-    get_dataset_layout,
-    list_subjects,
-    return_regex,
-    check_layout,
-)
-from bidsname import create_mask_name
+from utils import check_layout
+from utils import config
+from utils import create_dir_for_file
+from utils import create_dir_if_absent
+from utils import get_dataset_layout
+from utils import get_deepmreye_mask_name
+from utils import list_subjects
+from utils import return_regex
 
 
 def coregister_and_extract_data(img: str):
@@ -73,6 +73,10 @@ def preprocess_dataset(dataset_path):
     check_layout(layout)
 
     create_dir_if_absent(cfg["output_folder"])
+    output = get_dataset_layout(cfg["output_folder"])
+    layout = set_dataset_description(layout)
+    output.dataset_description["GeneratedBy"][0]["Name"] = "deepMReye"
+    write_dataset_description(output)
 
     subjects = list_subjects(layout)
     if cfg["debug"]:

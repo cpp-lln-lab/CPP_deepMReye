@@ -1,9 +1,7 @@
-from utils import (
-    return_path_rel_dataset,
-    get_dataset_layout,
-    config,
-    get_deepmreye_mask_name,
-)
+from utils import config
+from utils import get_dataset_layout
+from utils import get_deepmreye_mask_name
+from utils import return_path_rel_dataset
 
 
 def test_get_dataset_layout_smoke_test():
