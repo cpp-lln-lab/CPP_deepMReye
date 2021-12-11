@@ -41,8 +41,12 @@ def generalize(dataset_path):
             print(f"adding file: {os.path.basename(file)}")
             all_data.append(file)
 
+    print("\n")
+
     generators = data_generator.create_generators(all_data, all_data)
     generators = (*generators, all_data, all_data)
+
+    print("\n")
 
     # Get untrained model and load with trained weights
     opts = model_opts.get_opts()
@@ -53,13 +57,13 @@ def generalize(dataset_path):
     model_inference.load_weights(model_weights)
 
     (evaluation, scores) = train.evaluate_model(
-        dataset="example_data",
+        dataset="_group_output",
         model=model_inference,
         generators=generators,
         save=True,
-        model_path=layout.root,
+        model_path=os.path.join(layout.root, "deepMReye"),
         model_description="",
-        verbose=2,
+        verbose=3,
         percentile_cut=80,
     )
 
