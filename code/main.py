@@ -22,14 +22,32 @@ experiment_folder = (
 model_weights = "/inputs/models/dataset1_guided_fixations.h5"
 
 
-(eyemask_small, eyemask_big, dme_template, mask, x_edges, y_edges, z_edges) = preprocess.get_masks()
+(
+    eyemask_small,
+    eyemask_big,
+    dme_template,
+    mask,
+    x_edges,
+    y_edges,
+    z_edges,
+) = preprocess.get_masks()
 
 # Loop across participants and extract eye mask
 for participant in participants:
-    if participant.startswith('s'):
-        print('Running participant {}'.format(participant))
+    if participant.startswith("s"):
+        print(f"Running participant {participant}")
         participant_folder = functional_data + participant
         for run in os.listdir(participant_folder):
-            if run.startswith('run'):
-                fp_func = participant_folder + os.path.sep + run # Filepath to functional
-                preprocess.run_participant(fp_func, dme_template, eyemask_big, eyemask_small, x_edges, y_edges, z_edges)
+            if run.startswith("run"):
+                fp_func = (
+                    participant_folder + os.path.sep + run
+                )  # Filepath to functional
+                preprocess.run_participant(
+                    fp_func,
+                    dme_template,
+                    eyemask_big,
+                    eyemask_small,
+                    x_edges,
+                    y_edges,
+                    z_edges,
+                )

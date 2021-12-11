@@ -1,37 +1,23 @@
 import os
 
-from bidsname import get_bidsname_config, init_layout, get_ephys_filename
+from utils import get_dataset_layout
+
+from bidsname import get_bidsname_config, create_mask_name
 
 
 def test_get_bidsname_config_smoke_test():
     bidsname_config = get_bidsname_config()
-    assert list(bidsname_config.keys()) == [
-        "ephys_file",
-        "ephys_file_rel_path",
-        "scans_tsv",
-        "sessions_tsv",
-    ]
+    assert list(bidsname_config.keys()) == ["mask"]
 
 
-def test_init_layout_smoke_test():
-    init_layout("data")
+def test_create_mask_name():
 
+    filename = "/home/john/gin/dataset/sub-03/func/sub-03_task-rest_space-T1w_desc-preproc_bold.nii.gz"
 
-def test_get_ephys_filename():
+    layout = get_dataset_layout("data")
+    mask = create_mask_name(layout, filename)
 
-    entities = {
-        "subject": "01",
-        "session": None,
-        "sample": "A",
-        "run": 1,
-        "task": "nox",
-        "suffix": "ephys",
-        "extension": "nwb",
-    }
-    layout = init_layout("data")
-    filename = get_ephys_filename(layout, entities)
-    rel_path = filename.split("/")[-4:]
     assert (
-        os.path.join(*rel_path)
-        == "data/sub-01/ephys/sub-01_sample-A_task-nox_run-1_ephys.nwb"
+        mask
+        == "/home/remi/github/CPP_deepMReye/code/data/sub-03/func/sub-03_task-rest_space-T1w_desc-eye_mask.p"
     )

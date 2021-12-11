@@ -1,6 +1,3 @@
 {
-    "ephys_file": "sub-{subject}/[ses-{session}]/ephys/sub-{subject}[_ses-{session}]_sample-{sample}_task-{task}[_run-{run}]_{suffix}.{extension}",
-    "ephys_file_rel_path": "ephys/sub-{subject}[_ses-{session}]_sample-{sample}_task-{task}[_run-{run}]_{suffix}.{extension}",
-    "scans_tsv": "sub-{subject}/[ses-{session}]/sub-{subject}[_ses-{session}]_scans.tsv",
-    "sessions_tsv": "sub-{subject}/sub-{subject}_sessions.tsv"
+    "mask": "sub-{subject}/[ses-{session}]/func/sub-{subject}[_ses-{session}]_task-{task}[_acq-{acq}][_ce-{ce}][_rec-{rec}][_dir-{dir}][_run-{run}][_echo-{echo}][_part-{part}][_space-{space}][_res-{res}][_den-{den}][_label-{label}]_desc-eye_mask.p"
 }

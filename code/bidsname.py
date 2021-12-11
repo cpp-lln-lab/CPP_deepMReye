@@ -1,19 +1,7 @@
 import json
 import os
 
-from bids import BIDSLayout
-
 from pathlib import Path
-
-
-def create_dir(output_path):
-    if not Path(output_path).exists():
-        os.makedirs(output_path)
-
-
-def create_dir_for_file(file: str):
-    output_path = os.path.dirname(os.path.abspath(file))
-    create_dir(output_path)
 
 
 def get_bidsname_config(config_file="") -> dict:
@@ -52,25 +40,13 @@ def get_config(config_file="", default="") -> dict:
         return json.load(ff)
 
 
-def init_layout(target_dir: str, pybids_config_file=""):
+def create_mask_name(layout, filename: str) -> str:
 
-    create_dir(target_dir)
+    entities = layout.parse_file_entities(filename)
 
-    if pybids_config_file == "":
-        pybids_config_file = get_pybids_config()
-    layout = BIDSLayout(target_dir, validate=False, config=pybids_config_file)
+    bids_name_config = get_bidsname_config()
+    output_file = layout.build_path(entities, bids_name_config["mask"], validate=False)
 
-    return layout
-
-
-def get_ephys_filename(layout, entities: dict, bidsname_config=""):
-
-    bids_name_config = get_bidsname_config(bidsname_config)
-    output_file = layout.build_path(
-        entities, bids_name_config["ephys_file"], validate=False
-    )
+    output_file = os.path.join(layout.root, output_file)
 
     return output_file
-
-
-# TODO function to generate scans and sessoins TSV filenames
