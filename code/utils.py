@@ -8,12 +8,13 @@ from bids import BIDSLayout
 from rich import print
 
 
-def config():
+def config() -> dict:
 
     cfg = {
         "output_folder": "../outputs/deepMReye/",
         "input_folder": "../inputs/rest_blnd_can_fmriprep/",
         "model_weights_file": "../inputs/models/dataset1_guided_fixations.h5",
+        "participant": [],
         "space": "MNI152NLin2009cAsym",
         "suffix": "bold",
         "task": "rest",
@@ -34,7 +35,7 @@ def move_file(input: str, output: str):
     os.rename(input, output)
 
 
-def create_dir_if_absent(output_path):
+def create_dir_if_absent(output_path: str):
     if not Path(output_path).exists():
         print(f"Creating dir: {output_path}")
         os.makedirs(output_path)
@@ -49,8 +50,18 @@ def return_regex(string):
     return f"^{string}$"
 
 
-def list_subjects(layout):
-    subjects = layout.get_subjects()
+def list_subjects(layout, cfg={}):
+
+    if cfg == {} or cfg["participant"] == []:
+        subjects = layout.get_subjects()
+    else:
+        subjects = layout.get(
+            return_type="id", target="subject", subject=cfg["participant"]
+        )
+
+    if subjects == [] or subjects is None:
+        raise Exception("No subject found")
+
     return subjects
 
 
@@ -64,7 +75,7 @@ def get_dataset_layout(dataset_path: str):
 
 def check_layout(layout):
 
-    # TODO check that subject requested exists and has data to process
+    # TODO check that subject requested has data to process
 
     desc = layout.get_dataset_description()
     if desc["DatasetType"] != "derivative":
@@ -97,7 +108,7 @@ def check_layout(layout):
         raise Exception("Input dataset does not have any data to process")
 
 
-def return_path_rel_dataset(file_path, dataset_path):
+def return_path_rel_dataset(file_path: str, dataset_path: str) -> str:
     """
     Create file path relative to the root of a dataset
     """

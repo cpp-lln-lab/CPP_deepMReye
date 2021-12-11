@@ -19,9 +19,11 @@ def generalize(dataset_path):
     layout = get_dataset_layout(dataset_path)
     check_layout(layout)
 
-    subjects = list_subjects(layout)
+    subjects = list_subjects(layout, cfg)
     if cfg["debug"]:
         subjects = [subjects[0]]
+
+    print(f"processing subjects: {subjects}\n")
 
     all_data = []
 

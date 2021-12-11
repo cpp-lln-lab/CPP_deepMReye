@@ -80,9 +80,11 @@ def preprocess_dataset(dataset_path):
     output.dataset_description["GeneratedBy"][0]["Name"] = "deepMReye"
     write_dataset_description(output)
 
-    subjects = list_subjects(layout)
+    subjects = list_subjects(layout, cfg)
     if cfg["debug"]:
         subjects = [subjects[0]]
+
+    print(f"processing subjects: {subjects}\n")
 
     for subject_label in subjects:
 

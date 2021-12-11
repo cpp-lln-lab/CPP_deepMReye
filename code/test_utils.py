@@ -1,7 +1,20 @@
 from utils import config
 from utils import get_dataset_layout
-from utils import get_deepmreye_mask_name
+from utils import get_deepmreye_filename
+from utils import list_subjects
 from utils import return_path_rel_dataset
+
+
+def test_list_subjects():
+
+    cfg = config()
+    cfg["participant"] = ["sccb01"]
+
+    layout = get_dataset_layout(cfg["input_folder"])
+
+    subjects = list_subjects(layout, cfg)
+
+    assert subjects == ["sccb01"]
 
 
 def test_get_dataset_layout_smoke_test():
@@ -20,7 +33,7 @@ def test_return_path_rel_dataset():
     )
 
 
-def test_get_deepmreye_mask_name():
+def test_get_deepmreye_filename():
 
     # TODO need dummy dataset to test this
 
@@ -36,7 +49,7 @@ def test_get_deepmreye_mask_name():
         extension=".nii.gz",
     )
 
-    deepmreye_mask_name = get_deepmreye_mask_name(layout, img)
+    deepmreye_mask_name = get_deepmreye_filename(layout, img, "mask")
 
     assert (
         deepmreye_mask_name
