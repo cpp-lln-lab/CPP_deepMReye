@@ -1,11 +1,139 @@
 import os
+from os.path import abspath
+from os.path import dirname
+from os.path import join
+from pathlib import Path
 
-def return_path_rel_dataset(file_path, dataset_path):
+from bids import BIDSLayout
+from rich import print
+
+
+def config() -> dict:
+
+    cfg = {
+        "output_folder": "../outputs/deepMReye/",
+        "input_folder": "../inputs/rest_blnd_can_fmriprep/",
+        "model_weights_file": "../inputs/models/dataset1_guided_fixations.h5",
+        "participant": [],
+        "space": "MNI152NLin2009cAsym",
+        "suffix": "bold",
+        "task": "rest",
+        "debug": False,
+    }
+
+    has_GPU = False
+
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0" if has_GPU else ""
+
+    return cfg
+
+
+def move_file(input: str, output: str):
+
+    print(f"{abspath(input)} --> {abspath(output)}")
+    create_dir_for_file(output)
+    os.rename(input, output)
+
+
+def create_dir_if_absent(output_path: str):
+    if not Path(output_path).exists():
+        print(f"Creating dir: {output_path}")
+        os.makedirs(output_path)
+
+
+def create_dir_for_file(file: str):
+    output_path = dirname(abspath(file))
+    create_dir_if_absent(output_path)
+
+
+def return_regex(string):
+    return f"^{string}$"
+
+
+def list_subjects(layout, cfg={}):
+
+    if cfg == {} or cfg["participant"] == []:
+        subjects = layout.get_subjects()
+    else:
+        subjects = layout.get(
+            return_type="id", target="subject", subject=cfg["participant"]
+        )
+
+    if subjects == [] or subjects is None:
+        raise Exception("No subject found")
+
+    return subjects
+
+
+def get_dataset_layout(dataset_path: str):
+
+    create_dir_if_absent(dataset_path)
+
+    layout = BIDSLayout(dataset_path, validate=False, derivatives=False)
+    return layout
+
+
+def check_layout(layout):
+
+    # TODO check that subject requested has data to process
+
+    desc = layout.get_dataset_description()
+    if desc["DatasetType"] != "derivative":
+        raise Exception("Input dataset should be BIDS derivative")
+
+    generated_by = desc["GeneratedBy"][0]["Name"]
+
+    cfg = config()
+
+    if generated_by == "fMRIPrep":
+        bf = layout.get(
+            return_type="filename",
+            task=cfg["task"],
+            space=cfg["space"],
+            suffix="^bold$",
+            extension="nii.*",
+            regex_search=True,
+        )
+    elif generated_by == "deepMReye":
+        bf = layout.get(
+            return_type="filename",
+            task=cfg["task"],
+            space=cfg["space"],
+            suffix="^mask$",
+            extension="p",
+            regex_search=True,
+        )
+
+    if bf == []:
+        raise Exception("Input dataset does not have any data to process")
+
+
+def return_path_rel_dataset(file_path: str, dataset_path: str) -> str:
     """
     Create file path relative to the root of a dataset
     """
-    file_path = os.path.abspath(file_path)
-    dataset_path = os.path.abspath(dataset_path)
+    file_path = abspath(file_path)
+    dataset_path = abspath(dataset_path)
     rel_path = file_path.replace(dataset_path, "")
     rel_path = rel_path[1:]
     return rel_path
+
+
+def get_deepmreye_filename(layout, img: str, filetype: str) -> str:
+
+    if isinstance(img, (list)):
+        img = img[0]
+
+    bf = layout.get_file(img)
+    filename = bf.filename
+
+    if filetype == "mask":
+        filename = "mask_" + filename.replace("nii.gz", "p")
+    elif filetype == "report":
+        filename = "report_" + filename.replace("nii.gz", "html")
+
+    filefolder = dirname(abspath(img))
+
+    deepmreye_filename = join(filefolder, filename)
+
+    return deepmreye_filename

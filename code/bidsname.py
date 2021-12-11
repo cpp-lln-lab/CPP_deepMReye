@@ -1,19 +1,57 @@
 import json
-import os
-
-from bids import BIDSLayout
-
+from os.path import abspath
+from os.path import dirname
+from os.path import join
 from pathlib import Path
 
 
-def create_dir(output_path):
-    if not Path(output_path).exists():
-        os.makedirs(output_path)
+def write_dataset_description(layout):
+
+    output_file = join(layout.root, "dataset_description.json")
+
+    with open(output_file, "w") as ff:
+        json.dump(layout.dataset_description, ff)
 
 
-def create_dir_for_file(file: str):
-    output_path = os.path.dirname(os.path.abspath(file))
-    create_dir(output_path)
+def set_dataset_description(layout, is_derivative=True):
+
+    data = {
+        "Name": "dataset name",
+        "BIDSVersion": "1.6.0",
+        "DatasetType": "raw",
+        "License": "",
+        "Authors": ["", ""],
+        "Acknowledgements": "Special thanks to ",
+        "HowToAcknowledge": "Please cite this paper: ",
+        "Funding": ["", ""],
+        "EthicsApprovals": [""],
+        "ReferencesAndLinks": ["", ""],
+        "DatasetDOI": "doi:",
+        "HEDVersion": "",
+    }
+
+    if is_derivative:
+        data["GeneratedBy"] = [
+            {
+                "Name": "",
+                "Version": "",
+                "Container": {"Type": "", "Tag": ""},
+                "Description": "",
+                "CodeURL": "",
+            },
+        ]
+
+        data["SourceDatasets"] = [
+            {
+                "DOI": "doi:",
+                "URL": "",
+                "Version": "",
+            }
+        ]
+
+    layout.dataset_description = data
+
+    return layout
 
 
 def get_bidsname_config(config_file="") -> dict:
@@ -43,8 +81,8 @@ def get_pybids_config(config_file="") -> dict:
 def get_config(config_file="", default="") -> dict:
 
     if config_file == "" or not Path(config_file).exists():
-        my_path = os.path.dirname(os.path.abspath(__file__))
-        config_file = os.path.join(my_path, default)
+        my_path = dirname(abspath(__file__))
+        config_file = join(my_path, default)
 
     if config_file == "" or not Path(config_file).exists():
         return
@@ -52,25 +90,15 @@ def get_config(config_file="", default="") -> dict:
         return json.load(ff)
 
 
-def init_layout(target_dir: str, pybids_config_file=""):
+def create_bidsname(layout, filename: str, filetype: str) -> str:
 
-    create_dir(target_dir)
+    entities = layout.parse_file_entities(filename)
 
-    if pybids_config_file == "":
-        pybids_config_file = get_pybids_config()
-    layout = BIDSLayout(target_dir, validate=False, config=pybids_config_file)
-
-    return layout
-
-
-def get_ephys_filename(layout, entities: dict, bidsname_config=""):
-
-    bids_name_config = get_bidsname_config(bidsname_config)
+    bids_name_config = get_bidsname_config()
     output_file = layout.build_path(
-        entities, bids_name_config["ephys_file"], validate=False
+        entities, bids_name_config[filetype], validate=False
     )
 
+    output_file = abspath(join(layout.root, output_file))
+
     return output_file
-
-
-# TODO function to generate scans and sessoins TSV filenames

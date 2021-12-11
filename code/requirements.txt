@@ -5,4 +5,4 @@ nb_black
 datalad
 rich
 pytest
-git+https://github.com/DeepMReye/DeepMReye.git
+pre-commit
