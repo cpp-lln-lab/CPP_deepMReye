@@ -9,8 +9,7 @@ from utils import check_layout
 from utils import config
 from utils import create_dir_if_absent
 from utils import get_dataset_layout
-from utils import get_deepmreye_mask_name
-from utils import get_deepmreye_mask_report
+from utils import get_deepmreye_filename
 from utils import list_subjects
 from utils import move_file
 from utils import return_regex
@@ -61,11 +60,11 @@ def preprocess_subject(layout, subject_label):
         coregister_and_extract_data(img)
 
         mask_name = create_bidsname(output, img, "mask")
-        deepmreye_mask_name = get_deepmreye_mask_name(layout, img)
+        deepmreye_mask_name = get_deepmreye_filename(layout, img, "mask")
         move_file(deepmreye_mask_name, mask_name)
 
         report_name = create_bidsname(output, img, "report")
-        deepmreye_mask_report = get_deepmreye_mask_report(layout, img)
+        deepmreye_mask_report = get_deepmreye_filename(layout, img, "report")
         move_file(deepmreye_mask_report, report_name)
 
 
