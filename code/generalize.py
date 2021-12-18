@@ -59,7 +59,7 @@ def generalize(dataset_path):
     model_inference.load_weights(model_weights)
 
     (evaluation, scores) = train.evaluate_model(
-        dataset="_group_output",
+        dataset="group_output",
         model=model_inference,
         generators=generators,
         save=True,
