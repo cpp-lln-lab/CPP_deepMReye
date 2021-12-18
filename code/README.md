@@ -47,3 +47,7 @@ python3 combine.py
 ```bash
 python3 generalize.py
 ```
+
+```bash
+python3 generate_confounds.py
+```
