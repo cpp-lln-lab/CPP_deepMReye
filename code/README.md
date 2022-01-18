@@ -33,7 +33,7 @@ pip install .
 
 ## Run
 
-At the moment several value, including the input dataset, are hard coded in
+At the moment several values, including the input dataset, are hard coded in
 `utils.config`.
 
 ```bash
