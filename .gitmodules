@@ -5,5 +5,5 @@
 	datalad-url = git@gin.g-node.org:/cpp-lln-lab/rest_blnd_can_fmriprep.git
 [submodule "outputs/deepMReye"]
 	path = outputs/deepMReye
-	url = ./outputs/deepMReye
+	url = git@gin.g-node.org:/cpp-lln-lab/rest_blnd_can_deepMReye.git
 	datalad-id = 65633570-a8ff-48c7-a8ca-e94380a61159
