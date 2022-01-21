@@ -23,8 +23,6 @@ def process_subject(layout, subject_label):
 
     print(f"Running subject: {subject_label}")
 
-    subj = {"data": [], "labels": [], "ids": []}
-
     masks = layout.get(
         return_type="filename",
         subject=return_regex(subject_label),
@@ -55,14 +53,15 @@ def process_subject(layout, subject_label):
             )
             continue
 
-        # Store across runs
+        # Store for each runs
+        subj = {"data": [], "labels": [], "ids": []}
         subj["data"].append(this_mask)
         subj["labels"].append(this_label)
         subj["ids"].append(
             ([subject_label] * this_label.shape[0], [i] * this_label.shape[0])
         )
 
-    save_participant_file(layout, img, subj)
+        save_participant_file(layout, img, subj)
 
 
 def save_participant_file(layout, img, subj):

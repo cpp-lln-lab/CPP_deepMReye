@@ -1,4 +1,5 @@
 import os
+import re
 from os.path import abspath
 from os.path import dirname
 from os.path import join
@@ -124,13 +125,20 @@ def get_deepmreye_filename(layout, img: str, filetype: str) -> str:
     bf = layout.get_file(img)
     filename = bf.filename
 
-    if filetype == "mask":
-        filename = "mask_" + filename.replace("nii.gz", "p")
-    elif filetype == "report":
-        filename = "report_" + filename.replace("nii.gz", "html")
+    filename = return_deepmreye_output_filename(filename, filetype)
 
     filefolder = dirname(abspath(img))
 
     deepmreye_filename = join(filefolder, filename)
 
     return deepmreye_filename
+
+
+def return_deepmreye_output_filename(filename: str, filetype: str) -> str:
+
+    if filetype == "mask":
+        filename = "mask_" + re.sub(r"\.nii.*", ".p", filename)
+    elif filetype == "report":
+        filename = "report_" + re.sub(r"\.nii.*", ".html", filename)
+
+    return filename
