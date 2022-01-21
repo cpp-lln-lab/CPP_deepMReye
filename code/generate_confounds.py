@@ -18,7 +18,7 @@ def generate_confounds(dataset_path):
     check_layout(layout)
 
     content = np.load(
-        file=os.path.join(dataset_path, "deepMReyeresults__group_output.npy"),
+        file=os.path.join(dataset_path, "deepMReyeresults_group_output.npy"),
         allow_pickle=True,
     )
 

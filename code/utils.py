@@ -75,26 +75,23 @@ def get_dataset_layout(dataset_path: str):
 
 def check_layout(layout):
 
-    # TODO check that subject requested has data to process
-
     desc = layout.get_dataset_description()
     if desc["DatasetType"] != "derivative":
         raise Exception("Input dataset should be BIDS derivative")
 
-    generated_by = desc["GeneratedBy"][0]["Name"]
-
     cfg = config()
 
-    if generated_by == "fMRIPrep":
-        bf = layout.get(
-            return_type="filename",
-            task=cfg["task"],
-            space=cfg["space"],
-            suffix="^bold$",
-            extension="nii.*",
-            regex_search=True,
-        )
-    elif generated_by == "deepMReye":
+    bf = layout.get(
+        return_type="filename",
+        task=cfg["task"],
+        space=cfg["space"],
+        suffix="^bold$",
+        extension="nii.*",
+        regex_search=True,
+    )
+
+    generated_by = desc["GeneratedBy"][0]["Name"]
+    if generated_by.lower() == "deepmreye":
         bf = layout.get(
             return_type="filename",
             task=cfg["task"],
