@@ -1,5 +1,7 @@
 # Project CPP_deepMReye
 
+# This repo is archived: checkout this one instead https://github.com/cpp-lln-lab/bidsMReye
+
 ```
 datalad install --recursive https://github.com/cpp-lln-lab/CPP_deepMReye.git
 ```
